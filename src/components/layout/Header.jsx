@@ -1,0 +1,2 @@
+export function Topbar({ setOpen }) { return <header className="topbar"><button className="menu-button" aria-label="Open navigation" onClick={() => setOpen(true)}>☰</button><div className="search"><span>⌕</span><input aria-label="Search" placeholder="Search anything..." /></div><button className="icon-button notification" aria-label="Notifications">♧<i /></button><button className="status-dot" aria-label="Online status"><span /></button></header> }
+export default Topbar
