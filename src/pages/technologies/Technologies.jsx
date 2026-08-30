@@ -1,13 +1,15 @@
-const technologies = [
-  ['React', 'Frontend library', '12 projects'],
-  ['Next.js', 'React framework', '8 projects'],
-  ['TypeScript', 'Typed JavaScript', '7 projects'],
-  ['Supabase', 'Backend platform', '4 projects'],
-  ['Figma', 'Design tool', '15 projects'],
-  ['Tailwind CSS', 'Utility-first CSS', '9 projects'],
+const defaultTechnologies = [
+  { id: 'technology-react', name: 'React', slug: 'react', description: 'Frontend library', category: 'Frontend', status: 'Active', featured: true, visible: true, order: 1, meta: '12 projects' },
+  { id: 'technology-nextjs', name: 'Next.js', slug: 'nextjs', description: 'React framework', category: 'Frontend', status: 'Active', featured: false, visible: true, order: 2, meta: '8 projects' },
+  { id: 'technology-typescript', name: 'TypeScript', slug: 'typescript', description: 'Typed JavaScript', category: 'Frontend', status: 'Active', featured: false, visible: true, order: 3, meta: '7 projects' },
+  { id: 'technology-supabase', name: 'Supabase', slug: 'supabase', description: 'Backend platform', category: 'Backend', status: 'Active', featured: false, visible: true, order: 4, meta: '4 projects' },
+  { id: 'technology-figma', name: 'Figma', slug: 'figma', description: 'Design tool', category: 'Tools', status: 'Active', featured: false, visible: true, order: 5, meta: '15 projects' },
+  { id: 'technology-tailwind', name: 'Tailwind CSS', slug: 'tailwind-css', description: 'Utility-first CSS', category: 'Frontend', status: 'Active', featured: false, visible: true, order: 6, meta: '9 projects' },
 ]
 
-export default function Technologies({ onCreate, onEdit }) {
+export { defaultTechnologies }
+
+export default function Technologies({ technologies = defaultTechnologies, onCreate, onEdit }) {
   return (
     <div className="content static-content">
       <div className="page-heading">
@@ -20,15 +22,15 @@ export default function Technologies({ onCreate, onEdit }) {
         </button>
       </div>
       <div className="static-list">
-        {technologies.map(([name, description, meta]) => (
-          <article className="static-row" key={name}>
+        {technologies.map(technology => (
+          <article className="static-row" key={technology.id}>
             <span className="row-icon">□</span>
             <div className="static-copy">
-              <strong>{name}</strong>
-              <p>{description}</p>
-              <small>{meta}</small>
+              <strong>{technology.name}</strong>
+              <p>{technology.description}</p>
+              <small>{technology.meta || (technology.order || 0) + ' projects'}</small>
             </div>
-            <button className="row-action" onClick={() => onEdit(name)}>
+            <button className="row-action" type="button" onClick={() => onEdit(technology)}>
               Edit
             </button>
           </article>

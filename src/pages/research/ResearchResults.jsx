@@ -124,7 +124,7 @@ function ResearchResults({ onNewResearch, onBack, onOpenResult }) {
           <p>Found {filteredResults.length ? 125 : 0} trending designs for “{config.topic}”</p>
         </div>
         <div className="results-actions">
-          <button className="secondary" type="button" onClick={onBack}>↩ &nbsp; New Search</button>
+          <button className="secondary" type="button" onClick={onNewResearch}>↩ &nbsp; New Search</button>
           <button className="secondary" type="button">⇩ &nbsp; Export Results</button>
           <button className="primary" type="button" onClick={onNewResearch}>＋ New Research</button>
         </div>

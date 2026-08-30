@@ -3,22 +3,17 @@ import FormField from '../../components/ui/FormField.jsx'
 
 const categories = ['Frontend', 'Backend', 'Database', 'DevOps', 'Cloud', 'Mobile', 'Tools', 'Other']
 
-export default function TechnologyEditor({ editing, onBack }) {
+export default function TechnologyEditor({ editing, technology: selectedTechnology, onBack, onSave }) {
   const initial = editing
-    ? {
-        name: 'React',
-        slug: 'react',
-        description: 'A JavaScript library for building user interfaces.',
-        category: 'Frontend',
-        status: 'Active',
-        order: 1,
-      }
+    ? selectedTechnology
     : {
         name: '',
         slug: '',
         description: '',
         category: 'Frontend',
         status: 'Active',
+        featured: false,
+        visible: true,
         order: 1,
       }
 
@@ -27,14 +22,23 @@ export default function TechnologyEditor({ editing, onBack }) {
   const [description, setDescription] = useState(initial.description)
   const [category, setCategory] = useState(initial.category)
   const [status, setStatus] = useState(initial.status)
-  const [featured, setFeatured] = useState(Boolean(editing))
-  const [visible, setVisible] = useState(true)
+  const [featured, setFeatured] = useState(Boolean(initial.featured))
+  const [visible, setVisible] = useState(initial.visible !== false)
   const [order, setOrder] = useState(initial.order)
-  const [notice, setNotice] = useState('')
 
-  const save = message => {
-    setNotice(message)
-    window.setTimeout(() => setNotice(''), 2200)
+  const save = () => {
+    onSave({
+      ...initial,
+      id: initial.id,
+      name,
+      slug,
+      description,
+      category,
+      status,
+      featured,
+      visible,
+      order,
+    })
   }
 
   const updateName = value => {
@@ -58,15 +62,14 @@ export default function TechnologyEditor({ editing, onBack }) {
         </button>
         <div className="editor-title"><h1>{editing ? 'Edit Technology' : 'Create Technology'}</h1><p>Manage this technology in your portfolio.</p></div>
         <div className="editor-actions">
-          <button className="secondary" onClick={() => save('Technology saved')}>
+          <button className="secondary" type="button" onClick={save}>
             Save{editing ? ' Changes' : ''}
           </button>
-          <button className="primary" onClick={() => save(editing ? 'Changes saved' : 'Technology created')}>
+          <button className="primary" type="button" onClick={save}>
             {editing ? 'Save Changes' : 'Save'}
           </button>
         </div>
       </div>
-      {notice && <div className="toast">✓ {notice}</div>}
       <div className="editor-grid technology-grid">
         <div className="editor-main">
           <section className="form-panel">

@@ -5,7 +5,7 @@ const categories = ['Development', 'Design', 'Strategy', 'Communication', 'Other
 const levels = ['Beginner', 'Intermediate', 'Advanced', 'Expert']
 const emptySkill = { name: '', description: '', category: 'Development', level: 'Intermediate', featured: false, visible: true, order: 1 }
 
-export default function SkillEditor({ editing = false, skill, onBack }) {
+export default function SkillEditor({ editing = false, skill, onBack, onSave }) {
   const initial = editing && skill ? skill : emptySkill
   const [name, setName] = useState(initial.name)
   const [description, setDescription] = useState(initial.description)
@@ -14,11 +14,18 @@ export default function SkillEditor({ editing = false, skill, onBack }) {
   const [featured, setFeatured] = useState(Boolean(initial.featured))
   const [visible, setVisible] = useState(initial.visible !== false)
   const [order, setOrder] = useState(initial.order)
-  const [notice, setNotice] = useState('')
-
-  const save = message => {
-    setNotice(message)
-    window.setTimeout(() => setNotice(''), 2200)
+  const save = () => {
+    onSave({
+      ...initial,
+      id: initial.id,
+      name,
+      description,
+      category,
+      level,
+      featured,
+      visible,
+      order,
+    })
   }
 
   return (
@@ -30,11 +37,10 @@ export default function SkillEditor({ editing = false, skill, onBack }) {
           <p>Manage this skill in your portfolio.</p>
         </div>
         <div className="editor-actions">
-          <button className="secondary" onClick={() => save('Skill saved')}>Save{editing ? ' Changes' : ''}</button>
-          <button className="primary" onClick={() => save(editing ? 'Changes saved' : 'Skill created')}>{editing ? 'Save Changes' : 'Save'}</button>
+          <button className="secondary" type="button" onClick={save}>Save{editing ? ' Changes' : ''}</button>
+          <button className="primary" type="button" onClick={save}>{editing ? 'Save Changes' : 'Save'}</button>
         </div>
       </div>
-      {notice && <div className="toast">✓ {notice}</div>}
       <div className="editor-grid technology-grid">
         <div className="editor-main">
           <section className="form-panel">

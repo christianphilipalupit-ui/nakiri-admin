@@ -29,7 +29,7 @@ const opportunities = [
   { title: 'Eco-Friendly Tech Shirts', level: 'High Potential', icon: '♧', tone: 'high' },
 ]
 
-function ResearchDashboard({ onNewResearch, onOpenSavedResearch }) {
+function ResearchDashboard({ onNewResearch, onOpenSavedResearch, onOpenOpportunities }) {
   const [query, setQuery] = useState('')
   const [range, setRange] = useState('Last 7 days')
   const filteredResearches = useMemo(() => {
@@ -54,7 +54,7 @@ function ResearchDashboard({ onNewResearch, onOpenSavedResearch }) {
         <section className="panel research-panel"><div className="research-panel-title"><h2>Top Trending Niches</h2><span>View all</span></div><div className="niche-list">{niches.map(niche => <div className="niche-row" key={niche.name}><span>{niche.name}</span><span className="niche-meter"><i style={{ width: `${niche.score}%` }} /></span><small>{niche.score}</small></div>)}</div></section>
       </div>
 
-      <section className="panel research-panel opportunities-panel"><div className="research-panel-title"><h2>Recent Opportunities</h2><span>View all</span></div><div className="opportunity-list">{opportunities.map(item => <article className="opportunity-card" key={item.title}><span className={`opportunity-icon ${item.tone}`} aria-hidden="true">{item.icon}</span><div><strong>{item.title}</strong><small className={item.tone}>{item.level}</small></div><button type="button" aria-label={`More actions for ${item.title}`}>⋮</button></article>)}</div></section>
+      <section className="panel research-panel opportunities-panel"><div className="research-panel-title"><h2>Recent Opportunities</h2><button type="button" onClick={onOpenOpportunities}>View all</button></div><div className="opportunity-list">{opportunities.map(item => <article className="opportunity-card" key={item.title}><span className={`opportunity-icon ${item.tone}`} aria-hidden="true">{item.icon}</span><div><strong>{item.title}</strong><small className={item.tone}>{item.level}</small></div><button type="button" aria-label={`More actions for ${item.title}`}>⋮</button></article>)}</div></section>
     </section>
   )
 }

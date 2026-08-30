@@ -7,17 +7,20 @@ const emptyProject = {
   name: '', slug: '', short: '', full: '', techs: [], status: 'Draft',
 }
 
-export default function ProjectEditor({ editing, onBack }) {
-  const project = editing ? { name: 'Forex Journal', slug: 'forex-journal', short: 'AI-powered trading journal with analytics and insights.', full: 'A focused trading journal that turns daily market research into clear, actionable insights.', techs: ['React', 'Firebase', 'OpenAI'], status: 'Published' } : emptyProject
+export default function ProjectEditor({ editing, project: selectedProject, onBack, onSave }) {
+  const project = editing ? selectedProject : emptyProject
+  const projectImages = project.images || []
   const [name, setName] = useState(project.name)
   const [slug, setSlug] = useState(project.slug)
   const [short, setShort] = useState(project.short)
   const [full, setFull] = useState(project.full)
   const [techs, setTechs] = useState(project.techs)
   const [status, setStatus] = useState(project.status)
-  const [visibility, setVisibility] = useState('Public')
-  const [featured, setFeatured] = useState(editing)
-  const [showOnPortfolio, setShowOnPortfolio] = useState(true)
+  const [visibility, setVisibility] = useState(project.visibility || 'Public')
+  const [featured, setFeatured] = useState(Boolean(project.featured))
+  const [showOnPortfolio, setShowOnPortfolio] = useState(project.showOnPortfolio !== false)
+  const [liveDemoUrl, setLiveDemoUrl] = useState(project.liveDemoUrl || '')
+  const [githubUrl, setGithubUrl] = useState(project.githubUrl || '')
   const [notice, setNotice] = useState('')
 
   const toggleTech = technology => {
@@ -34,6 +37,29 @@ export default function ProjectEditor({ editing, onBack }) {
     window.setTimeout(() => setNotice(''), 2200)
   }
 
+  const saveProject = nextStatus => {
+    if (!name.trim()) {
+      notify('Enter a project name before saving')
+      return
+    }
+
+    onSave({
+      ...project,
+      id: project.id,
+      name: name.trim(),
+      slug,
+      short,
+      full,
+      techs,
+      status: nextStatus || status,
+      visibility,
+      featured,
+      showOnPortfolio,
+      liveDemoUrl,
+      githubUrl,
+    })
+  }
+
   return (
     <div className="content editor-content project-editor">
       <div className="editor-heading">
@@ -43,8 +69,8 @@ export default function ProjectEditor({ editing, onBack }) {
           <p>{editing ? 'Update your portfolio project details.' : 'Add a project to your portfolio.'}</p>
         </div>
         <div className="editor-actions">
-          <button className="secondary" onClick={() => notify('Draft saved')}>Save Draft</button>
-          <button className="primary" onClick={() => notify(editing ? 'Project changes saved' : 'Project published')}>{editing ? 'Save Changes' : 'Publish'}</button>
+          <button className="secondary" type="button" onClick={() => saveProject('Draft')}>Save Draft</button>
+          <button className="primary" type="button" onClick={() => saveProject(editing ? status : 'Published')}>{editing ? 'Save Changes' : 'Publish'}</button>
         </div>
       </div>
 
@@ -59,13 +85,32 @@ export default function ProjectEditor({ editing, onBack }) {
             <FormField label="Short Description"><textarea rows="3" value={short} onChange={event => setShort(event.target.value)} placeholder="A short description for project cards..." /></FormField>
             <FormField label="Full Project Description"><textarea rows="7" value={full} onChange={event => setFull(event.target.value)} placeholder="Describe the project, your role, and the outcome..." /></FormField>
           </section>
-          <section className="form-panel"><h2>Project Media</h2><div className="upload-area"><span className="upload-icon">▧</span><strong>Upload Project Cover</strong><small>Drop image here · Recommended project thumbnail</small><button className="secondary">Choose Image</button></div></section>
+          <section className="form-panel">
+            <h2>Project Media</h2>
+            {projectImages.length ? (
+              <div className="project-media-grid">
+                {projectImages.map(image => (
+                  <figure className={`project-media-item ${image.is_cover ? 'is-cover' : ''}`} key={image.id || image.publicUrl}>
+                    <img src={image.publicUrl} alt={image.alt_text || `${name} project image ${image.sort_order || ''}`} />
+                    <figcaption>{image.is_cover ? 'Cover image' : `Image ${image.sort_order || ''}`}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            ) : (
+              <div className="upload-area">
+                <span className="upload-icon">▧</span>
+                <strong>Upload Project Cover</strong>
+                <small>Drop image here · Recommended project thumbnail</small>
+                <button className="secondary">Choose Image</button>
+              </div>
+            )}
+          </section>
           <section className="form-panel">
             <h2>Project Technologies</h2>
             <div className="tech-chips">{techs.map(technology => <span className="tag" key={technology}>{technology}<button onClick={() => toggleTech(technology)}>×</button></span>)}</div>
             <div className="tech-options">{technologyOptions.map(technology => <button type="button" key={technology} className={techs.includes(technology) ? 'selected' : ''} onClick={() => toggleTech(technology)}>{technology}</button>)}</div>
           </section>
-          <section className="form-panel"><h2>Project Links</h2><FormField label="Live Demo URL"><input placeholder="https://your-project.com" /></FormField><FormField label="GitHub Repository URL"><input placeholder="https://github.com/username/project" /></FormField></section>
+          <section className="form-panel"><h2>Project Links</h2><FormField label="Live Demo URL"><input value={liveDemoUrl} onChange={event => setLiveDemoUrl(event.target.value)} placeholder="https://your-project.com" /></FormField><FormField label="GitHub Repository URL"><input value={githubUrl} onChange={event => setGithubUrl(event.target.value)} placeholder="https://github.com/username/project" /></FormField></section>
         </div>
 
         <aside className="editor-side">
@@ -78,7 +123,23 @@ export default function ProjectEditor({ editing, onBack }) {
           </section>
           <section className="form-panel">
             <div className="section-inline"><h2>Project Preview</h2><span className="word-count">{status}</span></div>
-            <div className="project-preview"><div className="project-cover">▧<small>Cover image preview</small></div><h3>{name || 'Your project name'}</h3><p>{short || 'Your short project description will appear here.'}</p><div className="preview-tags">{techs.map(technology => <span key={technology}>{technology}</span>)}</div></div>
+            <div className="project-preview">
+              <div className="project-cover">
+                {project.coverImage ? (
+                  <img src={project.coverImage.publicUrl} alt={project.coverImage.alt_text || `${name} cover image`} />
+                ) : (
+                  <>
+                    ▧
+                    <small>Cover image preview</small>
+                  </>
+                )}
+              </div>
+              <h3>{name || 'Your project name'}</h3>
+              <p>{short || 'Your short project description will appear here.'}</p>
+              <div className="preview-tags">
+                {techs.map(technology => <span key={technology}>{technology}</span>)}
+              </div>
+            </div>
           </section>
         </aside>
       </div>
