@@ -26,7 +26,7 @@ import SocialPostEditor from './pages/social/SocialPostEditor.jsx'
 import SocialPosts, { defaultPosts as defaultSocialPosts } from './pages/social/SocialPosts.jsx'
 import Technologies, { defaultTechnologies } from './pages/technologies/Technologies.jsx'
 import TechnologyEditor from './pages/technologies/TechnologyEditor.jsx'
-import { fetchPortfolioProjects } from './data/portfolioProjects.js'
+import { fetchPortfolioProjects, isDemoMode } from './data/portfolioProjects.js'
 
 const editorParentPages = {
   ProjectEditor: 'Projects',
@@ -306,6 +306,7 @@ function App() {
 
       <main className="main">
         <Topbar setOpen={() => {}} />
+        {isDemoMode && <div className="demo-mode-badge">DEMO MODE · Local data only</div>}
         {renderPage()}
       </main>
     </div>

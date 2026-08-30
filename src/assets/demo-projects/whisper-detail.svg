@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title>Whisper Speech-to-Text transcription preview</title>
+  <rect width="800" height="500" rx="28" fill="#f1f7f1"/>
+  <rect x="105" y="105" width="590" height="290" rx="20" fill="#fff" stroke="#c8e7d3" stroke-width="5"/>
+  <circle cx="160" cy="165" r="20" fill="#16a466"/><rect x="205" y="150" width="300" height="22" rx="11" fill="#9ed9b4"/>
+  <rect x="145" y="235" width="500" height="16" rx="8" fill="#cfeadd"/><rect x="145" y="275" width="420" height="16" rx="8" fill="#cfeadd"/><rect x="145" y="315" width="350" height="16" rx="8" fill="#cfeadd"/>
+</svg>

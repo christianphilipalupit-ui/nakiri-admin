@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title>Whisper Speech-to-Text code preview</title>
+  <rect width="800" height="500" rx="28" fill="#173e4b"/>
+  <path d="m175 250 80-70 80 70-80 70zm450 0-80-70-80 70 80 70z" fill="none" stroke="#73d2a2" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+  <path d="M365 335 435 165" stroke="#d2efdc" stroke-linecap="round" stroke-width="18"/>
+</svg>
